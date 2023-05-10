@@ -1,0 +1,13 @@
+{
+  "name": "askmybook_rails",
+  "private": true,
+  "workspaces": [
+    "api",
+    "client"
+  ],
+  "scripts": {
+    "api:start": "cd api && bundle exec rails s -p 3001",
+    "client:start": "cd client && pnpm start",
+    "start": "pnpm api:start & pnpm client:start"
+  }
+}
