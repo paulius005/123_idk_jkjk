@@ -10,7 +10,7 @@
     "api-prod:start": "cd api && bundle exec rails server -b 0.0.0.0",
     "client:start": "cd client && pnpm start",
     "start": "pnpm api:start & pnpm client:start",
-    "build-prod": "cd client && pnpm run build && cd .. && pnpm run move-build && cd api && bundle install && cd ..",
+    "build-prod": "cd client && pnpm i && pnpm run build && cd .. && pnpm run move-build && cd api && bundle install && cd ..",
     "move-build": "rm -rf api/public/* && cp -r client/build/* api/public/"
   }
 }

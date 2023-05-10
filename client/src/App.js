@@ -12,7 +12,7 @@ const Example = () => {
 
   return (
     <div>
-      <h1>Example Component</h1>
+      <h1>Example Component1</h1>
       <p>{message}</p>
     </div>
   );
