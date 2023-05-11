@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { View, Reshaped } from 'reshaped';
 
-const Example = () => {
-  const [message, setMessage] = useState('');
+import React from 'react';
 
-  useEffect(() => {
-    fetch('/example/message')
-      .then((response) => response.json())
-      .then((data) => setMessage(data.message))
-      .catch((error) => console.error('Error:', error));
-  }, []);
+import 'reshaped/themes/reshaped/theme.css';
 
+import AskMyBook from './AskMyBook';
+
+const App = () => {
   return (
-    <div>
-      <h1>Example Component</h1>
-      <p>{message}</p>
-    </div>
+    <Reshaped theme='reshaped'>
+      <View width='100%' direction='column' align='center' justify='start'>
+        <AskMyBook />
+      </View>
+    </Reshaped>
   );
 };
 
-export default Example;
+export default App;
