@@ -1,11 +1,14 @@
 import { Button, View, TextArea, Text, Image } from 'reshaped';
 
 import React, { useState } from 'react';
+import axios from 'axios';
 
 import './index.css';
 
 const App = () => {
   const [message, setMessage] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [question, setQuestion] = useState('');
 
   return (
     <View
@@ -30,16 +33,26 @@ const App = () => {
       <TextArea
         className='mainTextArea'
         placeholder='What is this book about?'
+        onChange={({ event, name, value }) => setQuestion(value)}
       ></TextArea>
       <View direction='row' align='center' justify='center' gap={4}>
         <Button
           color='primary'
           size='xlarge'
-          onClick={() => {
-            fetch('/example/message')
-              .then((response) => response.json())
-              .then((data) => setMessage(data.message))
-              .catch((error) => console.error('Error:', error));
+          onClick={async () => {
+            try {
+              const response = await axios.post('/questions/ask', { question });
+              const { data } = response;
+
+              setAnswer(data.answer);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+
+            // fetch('/example/message')
+            //   .then((response) => response.json())
+            //   .then((data) => setMessage(data.message))
+            //   .catch((error) => console.error('Error:', error));
           }}
         >
           Ask question
@@ -48,6 +61,9 @@ const App = () => {
       </View>
       <Text variant='featured-3' color='neutral-faded'>
         {message}
+      </Text>
+      <Text variant='featured-3' color='neutral-faded'>
+        {answer}
       </Text>
     </View>
   );

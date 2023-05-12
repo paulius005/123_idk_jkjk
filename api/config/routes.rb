@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   get 'example/message', to: 'example#message'
+
+  resources :questions, only: [:index, :show]
+  post 'questions/ask', to: 'questions#ask'
 end
