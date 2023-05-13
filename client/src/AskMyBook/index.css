@@ -9,3 +9,8 @@
 .bookImage {
   border-radius: 8px;
 }
+
+.answerText {
+  text-align: left;
+  width: 100%;
+}

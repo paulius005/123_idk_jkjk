@@ -1,14 +1,56 @@
 import { Button, View, TextArea, Text, Image } from 'reshaped';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import AnimatedText from '../AnimatedText';
 
 import './index.css';
 
 const App = () => {
-  const [message, setMessage] = useState('');
+  const textAreaRef = useRef(null);
+
   const [answer, setAnswer] = useState('');
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState(
+    'What is this coding exercise about?'
+  );
+  const [animatedTextDone, setAnimatedTextDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function generateQuestion() {
+    const options = [
+      'What is this coding exercise about?',
+      'How long will it take?',
+      'Should I write unit tests for this exercise?',
+      'What is the best way to start this exercise?',
+    ];
+    const randomArrIndex = ~~(Math.random() * options.length);
+
+    return options[randomArrIndex];
+  }
+
+  async function askQuestion(generate = false) {
+    try {
+      let questionToSend = question;
+
+      if (generate) {
+        questionToSend = generateQuestion();
+
+        setQuestion(questionToSend);
+      }
+
+      setIsLoading(true);
+      const response = await axios.post('/questions/ask', {
+        question: questionToSend,
+      });
+      setIsLoading(false);
+      const { data } = response;
+
+      setAnswer(data.answer);
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  }
 
   return (
     <View
@@ -32,39 +74,59 @@ const App = () => {
       </Text>
       <TextArea
         className='mainTextArea'
-        placeholder='What is this book about?'
-        onChange={({ event, name, value }) => setQuestion(value)}
+        attributes={{ ref: textAreaRef }}
+        placeholder='What is this coding exercise about?'
+        onChange={({ event, name, value }) => {
+          setQuestion(value);
+          setAnswer('');
+        }}
+        value={question}
       ></TextArea>
-      <View direction='row' align='center' justify='center' gap={4}>
-        <Button
-          color='primary'
-          size='xlarge'
-          onClick={async () => {
-            try {
-              const response = await axios.post('/questions/ask', { question });
-              const { data } = response;
+      {!answer && (
+        <View direction='row' align='center' justify='center' gap={4}>
+          <Button
+            color='primary'
+            size='xlarge'
+            onClick={() => askQuestion(false)}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Asking...' : 'Ask question'}
+          </Button>
+          <Button
+            size='xlarge'
+            disabled={isLoading}
+            onClick={() => {
+              askQuestion(true);
+            }}
+          >
+            I'm feeling lucky
+          </Button>
+        </View>
+      )}
+      {answer && (
+        <Text className='answerText' variant='featured-3' color='neutral-faded'>
+          <b>Answer:</b>
+          <AnimatedText text={answer} setDone={setAnimatedTextDone} />
+        </Text>
+      )}
+      {answer && animatedTextDone && (
+        <View direction='row' align='start' justify='start' width='100%'>
+          <Button
+            color='primary'
+            size='xlarge'
+            onClick={() => {
+              textAreaRef.current.children[0].focus();
 
-              setAnswer(data.answer);
-            } catch (error) {
-              console.error('Error fetching data:', error);
-            }
-
-            // fetch('/example/message')
-            //   .then((response) => response.json())
-            //   .then((data) => setMessage(data.message))
-            //   .catch((error) => console.error('Error:', error));
-          }}
-        >
-          Ask question
-        </Button>
-        <Button size='xlarge'>I'm feeling lucky</Button>
-      </View>
-      <Text variant='featured-3' color='neutral-faded'>
-        {message}
-      </Text>
-      <Text variant='featured-3' color='neutral-faded'>
-        {answer}
-      </Text>
+              // move cursor to end of text area
+              textAreaRef.current.children[0].selectionStart =
+                textAreaRef.current.children[0].value.length;
+              setAnswer('');
+            }}
+          >
+            Ask another question
+          </Button>
+        </View>
+      )}
     </View>
   );
 };
