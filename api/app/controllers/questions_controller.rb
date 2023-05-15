@@ -42,6 +42,11 @@ class QuestionsController < ApplicationController
     @default_question = "What is this book about?"
   end
 
+  def show
+    question = Question.find(params[:id])
+    render json: { question: question.question, answer: question.answer, audio_src_url: question.audio_src_url, id: question.id }
+  end
+
   def ask
     question_asked = params[:question]
 
@@ -54,6 +59,11 @@ class QuestionsController < ApplicationController
       puts "previously asked and answered: #{previous_question.answer} (#{previous_question.audio_src_url})"
       previous_question.increment!(:ask_count)
       render json: { question: previous_question.question, answer: previous_question.answer, audio_src_url: audio_src_url, id: previous_question.id }
+    elsif previous_question.present? && !audio_src_url.present?
+      puts "previously asked and answered: #{previous_question.answer} (#{previous_question.audio_src_url})"
+      previous_question.increment!(:ask_count)
+
+      render json: { question: previous_question.question, answer: previous_question.answer, audio_src_url: nil, id: previous_question.id }
     else
       answer, context = answer_query_with_context(question_asked, @df, @document_embeddings)
 

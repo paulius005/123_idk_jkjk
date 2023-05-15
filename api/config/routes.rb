@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   # root "articles#index"
   get 'example/message', to: 'example#message'
 
-  resources :questions, only: [:index, :show]
+  resources :questions, only: [:show]
   post 'questions/ask', to: 'questions#ask'
 end

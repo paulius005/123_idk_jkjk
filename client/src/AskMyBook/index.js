@@ -1,20 +1,71 @@
-import { Button, View, TextArea, Text, Image } from 'reshaped';
+import { Button, View, TextArea, Text, Image, useToast } from 'reshaped';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import AnimatedText from '../AnimatedText';
 
 import './index.css';
 
 const App = () => {
+  const toast = useToast();
   const textAreaRef = useRef(null);
 
+  const [responseData, setResponseData] = useState(null);
   const [answer, setAnswer] = useState('');
   const [question, setQuestion] = useState(
     'What is this coding exercise about?'
   );
   const [animatedTextDone, setAnimatedTextDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadedExistingQuestion, setLoadedExistingQuestion] = useState(false);
+
+  useEffect(() => {
+    if (window.location.pathname.includes('question')) {
+      async function fetchData() {
+        const questionId = window.location.pathname.split('/')[2];
+
+        try {
+          let questionToSend = question;
+
+          const response = await axios.get(`/questions/${questionId}`, {
+            question: questionToSend,
+          });
+
+          setLoadedExistingQuestion(true);
+          setIsLoading(false);
+          const { data } = response;
+
+          setResponseData(data);
+          setQuestion(data.question);
+          setAnswer(data.answer);
+        } catch (error) {
+          setIsLoading(false);
+          console.error('Error fetching data:', error);
+
+          const id = toast.show({
+            title: 'Error',
+            size: 'large',
+            position: 'bottom',
+            text: 'Error fetching data. Check the console for full error output. ',
+            actionsSlot: <Button onClick={() => toast.hide(id)}>Hide</Button>,
+          });
+        }
+      }
+
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (animatedTextDone && !loadedExistingQuestion) {
+      window.history.replaceState(
+        window.history.state,
+        'document.title',
+        `/question/${responseData.id}`
+      );
+    }
+  }, [animatedTextDone]);
 
   function generateQuestion() {
     const options = [
@@ -45,10 +96,19 @@ const App = () => {
       setIsLoading(false);
       const { data } = response;
 
+      setResponseData(data);
       setAnswer(data.answer);
     } catch (error) {
       setIsLoading(false);
       console.error('Error fetching data:', error);
+
+      const id = toast.show({
+        title: 'Error',
+        size: 'large',
+        position: 'bottom',
+        text: 'Error fetching data. Check the console for full error output. ',
+        actionsSlot: <Button onClick={() => toast.hide(id)}>Hide</Button>,
+      });
     }
   }
 
@@ -106,7 +166,11 @@ const App = () => {
       {answer && (
         <Text className='answerText' variant='featured-3' color='neutral-faded'>
           <b>Answer:</b>
-          <AnimatedText text={answer} setDone={setAnimatedTextDone} />
+          <AnimatedText
+            text={answer}
+            setDone={setAnimatedTextDone}
+            loadedExistingQuestion={loadedExistingQuestion}
+          />
         </Text>
       )}
       {answer && animatedTextDone && (

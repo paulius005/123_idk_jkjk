@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AnimatedText = ({ text, setDone }) => {
+const AnimatedText = ({ text, setDone, loadedExistingQuestion }) => {
   const [visibleText, setVisibleText] = useState('');
   const [interval, setInterval] = useState(300);
 
@@ -10,6 +10,13 @@ const AnimatedText = ({ text, setDone }) => {
 
   useEffect(() => {
     let timer;
+
+    if (loadedExistingQuestion) {
+      setVisibleText(text);
+      setDone(true);
+
+      return;
+    }
 
     if (visibleText.length < text.length) {
       setDone(false);
@@ -25,6 +32,10 @@ const AnimatedText = ({ text, setDone }) => {
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleText, text]);
+
+  if (loadedExistingQuestion) {
+    return <span>{text}</span>;
+  }
 
   return <span>{visibleText}</span>;
 };
