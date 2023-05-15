@@ -35,6 +35,8 @@ class QuestionsController < ApplicationController
   def ask
     question_asked = params[:question]
 
+    puts "paulius question_asked: ", question_asked
+
     question_asked += '?' unless question_asked.ends_with?('?')
 
     previous_question = Question.find_by(question: question_asked)
@@ -125,8 +127,10 @@ class QuestionsController < ApplicationController
       section_index = section[:title]
 
       document_section = get_document_section_by_title(section_index)
+
+      puts "document_section: #{document_section}"
   
-      chosen_sections_len += document_section['tokens'].to_i + @separator_len
+      chosen_sections_len += document_section['tokens'].to_i + separator_len
       if chosen_sections_len > max_section_len
         space_left = max_section_len - chosen_sections_len - separator.length
         chosen_sections.append(separator + document_section['content'][0...space_left])

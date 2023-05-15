@@ -46,3 +46,12 @@ development:
   password: <%= ENV['PGPASSWORD'] %>
   port: <%= ENV['PGPORT'] %>
   username: <%= ENV['PGUSER'] %>
+
+test:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+  database: <%= ENV['PGDATABASE'] %>
+  host: <%= ENV['PGHOST'] %>
+  password: <%= ENV['PGPASSWORD'] %>
+  port: <%= ENV['PGPORT'] %>
+  username: <%= ENV['PGUSER'] %>

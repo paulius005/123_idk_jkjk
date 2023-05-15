@@ -1,15 +1,15 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/questions.yml
 
 one:
-  question: MyString
-  answer: MyString
-  context: MyText
-  ask_count: 1
-  audio_src_url: MyString
+  question: 'What is the meaning of life?'
+  answer: '42'
+  context: 'A philosophical context'
+  audio_src_url: 'http://example.com/audio/1.mp3'
+  ask_count: 0
 
 two:
-  question: MyString
-  answer: MyString
-  context: MyText
-  ask_count: 1
-  audio_src_url: MyString
+  question: 'What is the capital of France?'
+  answer: 'Paris'
+  context: 'A geographical context'
+  audio_src_url: 'http://example.com/audio/2.mp3'
+  ask_count: 0

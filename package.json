@@ -11,6 +11,7 @@
     "api:start": "cd api && bundle exec rails s -p 3001",
     "client:start": "cd client && pnpm start",
     "build:prod": "cd client && pnpm i && pnpm run build && cd .. && pnpm run move-build && cd api && bundle install && cd ..",
-    "move-build": "rm -rf api/public/* && cp -r client/build/* api/public/"
+    "move-build": "rm -rf api/public/* && cp -r client/build/* api/public/",
+    "api:test": "cd api && rails test"
   }
 }

@@ -13,6 +13,10 @@ Brew install postgresql
 7. Start your API: `pnpm api:start`
 8. Start your client (new terminal tab): `pnpm client:start`
 
+# Tests
+
+Run `pnpm api:test` to run the rails app tests. The client does not have any tests currently.
+
 # Deployment
 
 Deployment is done with Railway. A push with changes to the `main` branch will trigger a new deploy.
