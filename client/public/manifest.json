@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Ask my book",
+  "name": "Ask my book - Product engineering challenge",
   "icons": [
     {
       "src": "favicon.ico",

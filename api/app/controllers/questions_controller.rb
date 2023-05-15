@@ -16,27 +16,12 @@ class QuestionsController < ApplicationController
     @doc_embeddings_model = "text-search-#{@model_name}-doc-001"
     @query_embeddings_model = "text-search-#{@model_name}-query-001"
     @completions_model = "text-davinci-003"
-    @max_section_len = 500
-    @separator = "\n* "
-    @separator_len = 3
 
     # Load dataframes
     @df = CSV.read(Rails.root.join('app', 'data', 'product_engineering_challenge.pdf.pages.csv'), headers: true)
     @document_embeddings = load_embeddings(Rails.root.join('app', 'data', 'product_engineering_challenge.pdf.embeddings.csv'))
     @OpenAIClient = OpenAI::Client.new(access_token: @openai_api_key)
   end
-
-  # # Add your API keys and other configurations here
-  # OPENAI_API_KEY = ""
-  # RESEMBLE_API_KEY = ""
-  # MODEL_NAME = "curie"
-  # DOC_EMBEDDINGS_MODEL = "text-search-#{MODEL_NAME}-doc-001"
-  # QUERY_EMBEDDINGS_MODEL = "text-search-#{MODEL_NAME}-query-001"
-  # COMPLETIONS_MODEL = "text-davinci-003"
-
-  # MAX_SECTION_LEN = 500
-  # SEPARATOR = "\n* "
-  # SEPARATOR_LEN = 3
 
   def index
     @default_question = "What is this book about?"
@@ -63,28 +48,13 @@ class QuestionsController < ApplicationController
       puts "previously asked and answered: #{previous_question.answer} (#{previous_question.audio_src_url})"
       previous_question.increment!(:ask_count)
 
+      # Resmbemle.ai goes here, should output audio_src_url
+
       render json: { question: previous_question.question, answer: previous_question.answer, audio_src_url: nil, id: previous_question.id }
     else
       answer, context = answer_query_with_context(question_asked, @df, @document_embeddings)
 
-      # project_uuid = '71c94a4f'
-      # voice_uuid = '16c50f71'
-
-      # response = Resemble.v2.clips.create_sync(
-      #   project_uuid,
-      #   voice_uuid,
-      #   "This is a sync test",
-      #   title: nil,
-      #   sample_rate: nil,
-      #   output_format: nil,
-      #   precision: nil,
-      #   include_timestamps: nil,
-      #   is_public: nil,
-      #   is_archived: nil,
-      #   raw: nil
-      # )
-
-      puts "response: ", response
+      # Resmbemle.ai goes here, should output audio_src_url
 
       question = Question.create!(
         question: question_asked,
@@ -156,7 +126,7 @@ class QuestionsController < ApplicationController
 
       document_section = get_document_section_by_title(section_index)
   
-      chosen_sections_len += document_section['tokens'].to_i + separator_len
+      chosen_sections_len += document_section['tokens'].to_i + @separator_len
       if chosen_sections_len > max_section_len
         space_left = max_section_len - chosen_sections_len - separator.length
         chosen_sections.append(separator + document_section['content'][0...space_left])
@@ -168,7 +138,7 @@ class QuestionsController < ApplicationController
       chosen_sections_indexes.append(section_index.to_s)
     end
   
-    header = """Sahil Lavingia is the founder and CEO of Gumroad, this is an interview exercise designed by him. Please keep your answers to three sentences maximum, and speak in complete sentences. Stop speaking once your point is made.\n\nContext that may be useful, pulled from The Minimalist Entrepreneur:\n"""
+    header = """Sahil Lavingia is the founder and CEO of Gumroad, this is an interview exercise designed by him. Please keep your answers to three sentences maximum, and speak in complete sentences. Stop speaking once your point is made.\n\n"""
   
     prompt = header + chosen_sections.join + "\n\n\nQ: " + question
 
