@@ -6,11 +6,11 @@
     "client"
   ],
   "scripts": {
+    "api:setup": "cd api && rails db:create && rails db:migrate && bundle install && cd ..",
+    "client:setup": "cd client && pnpm install && cd ..",
     "api:start": "cd api && bundle exec rails s -p 3001",
-    "api-prod:start": "cd api && bundle exec rails server -b 0.0.0.0",
     "client:start": "cd client && pnpm start",
-    "start": "pnpm api:start & pnpm client:start",
-    "build-prod": "cd client && pnpm i && pnpm run build && cd .. && pnpm run move-build && cd api && bundle install && cd ..",
+    "build:prod": "cd client && pnpm i && pnpm run build && cd .. && pnpm run move-build && cd api && bundle install && cd ..",
     "move-build": "rm -rf api/public/* && cp -r client/build/* api/public/"
   }
 }
