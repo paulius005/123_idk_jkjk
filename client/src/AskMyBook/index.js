@@ -135,8 +135,8 @@ const App = () => {
       </Link>
       <Text variant='title-2'>Ask My Book</Text>
       <Text variant='featured-3' color='neutral-faded'>
-        This is an experiment in using AI to make my book's content more
-        accessible. Ask a question and AI will answer it in real-time:
+        This is an experiment in using AI to make this code exercise's content
+        more accessible. Ask a question and AI will answer it:
       </Text>
       <TextArea
         className='mainTextArea'
