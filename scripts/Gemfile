@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "ruby-openai"
+gem 'csv'
+gem "blingfire"
+gem "pdf-reader"

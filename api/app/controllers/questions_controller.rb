@@ -1,15 +1,14 @@
 class QuestionsController < ApplicationController
   
   require "openai"
-  require 'csv'
-  require 'httparty'
-  require 'json'
+  require "csv"
+  require "httparty"
+  require "json"
 
 
   def initialize
     super
-
-    # Add your API keys and other configurations here
+    
     @openai_api_key = ENV["OPENAI_API_KEY"]
     @resemble_api_key = ""
     @model_name = "curie"
@@ -35,8 +34,6 @@ class QuestionsController < ApplicationController
   def ask
     question_asked = params[:question]
 
-    puts "paulius question_asked: ", question_asked
-
     question_asked += '?' unless question_asked.ends_with?('?')
 
     previous_question = Question.find_by(question: question_asked)
@@ -45,6 +42,7 @@ class QuestionsController < ApplicationController
     if audio_src_url.present?
       puts "previously asked and answered: #{previous_question.answer} (#{previous_question.audio_src_url})"
       previous_question.increment!(:ask_count)
+
       render json: { question: previous_question.question, answer: previous_question.answer, audio_src_url: audio_src_url, id: previous_question.id }
     elsif previous_question.present? && !audio_src_url.present?
       puts "previously asked and answered: #{previous_question.answer} (#{previous_question.audio_src_url})"
