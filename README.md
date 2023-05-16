@@ -17,6 +17,13 @@ Brew install postgresql
 
 Run `pnpm api:test` to run the rails app tests. The client does not have any tests currently.
 
+# Script
+
+1. Create and fill in `.env` using `.env.example` as an example in the `/scripts` directory.
+2. Run `bundle install`
+3. Run the script in the following format: `ruby pdf_to_pages_embeddings.rb product_engineering_challenge.pdf`
+4. Copy the resulting csv files `product_engineering_challenge.pdf.embeddings.csv` & `product_engineering_challenge.pdf.pages.csv` to the `/api/app/data/` directory. You will notice this already has the generated files, so the application can work.
+
 # Deployment
 
 Deployment is done with Railway. A push with changes to the `main` branch will trigger a new deploy.
