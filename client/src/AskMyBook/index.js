@@ -1,4 +1,4 @@
-import { Button, View, TextArea, Text, Image, useToast } from 'reshaped';
+import { Button, View, TextArea, Text, Image, useToast, Link } from 'reshaped';
 
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
@@ -122,11 +122,16 @@ const App = () => {
       className='mainView'
       padding={4}
     >
-      <Image
-        className='bookImage'
-        src='https://imagedelivery.net/YtcfQnb_m3yN9uzdhMII_A/0980e8bf-715f-4e2a-cb90-ecece879ad00/public'
-        height='200px'
-      ></Image>
+      <Link
+        href='https://gumroad.notion.site/Product-engineering-challenge-f7aa85150edd41eeb3537aae4632619f'
+        attributes={{ target: '_blank' }}
+      >
+        <Image
+          className='bookImage'
+          src='https://imagedelivery.net/YtcfQnb_m3yN9uzdhMII_A/0980e8bf-715f-4e2a-cb90-ecece879ad00/public'
+          height='200px'
+        ></Image>
+      </Link>
       <Text variant='title-2'>Ask My Book</Text>
       <Text variant='featured-3' color='neutral-faded'>
         This is an experiment in using AI to make my book's content more
