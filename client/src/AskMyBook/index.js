@@ -89,6 +89,7 @@ const App = () => {
         setQuestion(questionToSend);
       }
 
+      setLoadedExistingQuestion(false);
       setIsLoading(true);
       const response = await axios.post('/questions/ask', {
         question: questionToSend,
